@@ -76,7 +76,7 @@ export function Header({
   return (
     <>
       <div className="masthead">
-        <div>
+        <div className="masthead-left">
           <div className="wordmark">
             START <em>PAGE</em>
           </div>

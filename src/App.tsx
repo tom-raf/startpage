@@ -55,7 +55,7 @@ function App() {
                 + ADD A SECTION
               </button>
             ) : (
-              <form className="form" onSubmit={addSection} onKeyDown={(e) => e.key === "Escape" && setNewSection(null)}>
+              <form className="form section-form" onSubmit={addSection} onKeyDown={(e) => e.key === "Escape" && setNewSection(null)}>
                 <input
                   className="input title"
                   autoFocus

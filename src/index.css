@@ -107,7 +107,8 @@
 
   --page-pad-y: 28px;
   --page-pad-x: 36px;
-  --page-max: 1360px;
+  --page-max: 1344px; /* 48 grid squares */
+  --u: 28px; /* one background grid square */
   --page-max-wide: 1560px;
 
   --panel-pad: 18px 20px;
@@ -159,19 +160,37 @@ input {
 }
 
 .lc-paper {
-  background:
-    repeating-linear-gradient(0deg, transparent, transparent 27px, var(--grid-line) 27px, var(--grid-line) 28px),
-    repeating-linear-gradient(90deg, transparent, transparent 27px, var(--grid-line) 27px, var(--grid-line) 28px),
-    var(--surface-page);
+  /* stacking context, so the grid layer sits above this cream fill */
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--surface-page);
   color: var(--text-primary);
   font-family: var(--font-body);
   min-height: 100vh;
   padding: var(--page-pad-y) var(--page-pad-x);
 }
 
+/* The page is a whole number of grid squares wide, and the grid starts at its
+   top-left corner. Every box below is sized in squares so its edges land on lines. */
 .page {
-  max-width: var(--page-max);
+  position: relative;
+  width: min(var(--page-max), 100%);
+  width: min(var(--page-max), round(down, 100%, var(--u)));
   margin: 0 auto;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  /* a whole number of squares, so the pattern stays anchored to the page corner */
+  inset: calc(-100 * var(--u));
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--u) var(--u);
 }
 
 /* ---------- header ---------- */
@@ -179,9 +198,15 @@ input {
 .masthead {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  gap: var(--space-36);
+  align-items: flex-start;
+  gap: var(--u);
   flex-wrap: wrap;
+}
+
+.masthead-left {
+  height: calc(5 * var(--u));
+  display: flex;
+  flex-direction: column;
 }
 
 .wordmark {
@@ -189,7 +214,7 @@ input {
   font-size: var(--text-wordmark);
   font-weight: var(--weight-semibold);
   letter-spacing: var(--ls-wordmark);
-  line-height: var(--leading-tight);
+  line-height: calc(2 * var(--u));
 }
 
 .wordmark em {
@@ -201,7 +226,7 @@ input {
   font-size: var(--text-meta);
   letter-spacing: var(--ls-tagline);
   color: var(--text-secondary);
-  margin-top: var(--space-6);
+  line-height: var(--u);
 }
 
 .clock {
@@ -209,7 +234,7 @@ input {
   font-size: var(--text-numeral);
   font-weight: var(--weight-medium);
   letter-spacing: var(--ls-caption);
-  margin-top: var(--space-14);
+  line-height: calc(2 * var(--u));
   font-variant-numeric: tabular-nums;
 }
 
@@ -220,31 +245,38 @@ input {
 
 .masthead-right {
   display: flex;
-  align-items: stretch;
-  gap: var(--space-14);
+  gap: var(--u);
 }
 
 /* 76x40 pixel GIF shown at 3x, kept crisp */
+/* 9 x 5 squares. The 83x45 pixel GIF at 3x fills the inside of the border. */
 .kitchen {
+  width: calc(9 * var(--u));
+  height: calc(5 * var(--u));
   border: var(--border-panel);
   background: var(--surface-panel);
   display: flex;
   align-items: flex-end;
+  justify-content: center;
   overflow: hidden;
 }
 
 .kitchen img {
   display: block;
-  width: 228px;
-  height: 120px;
+  width: 249px;
+  height: 135px;
   image-rendering: pixelated;
 }
 
 .titleblock {
+  width: calc(13 * var(--u));
+  height: calc(5 * var(--u));
   border: var(--border-panel);
-  padding: var(--space-10) var(--space-14);
-  min-width: 340px;
+  padding: 0 var(--space-14);
   background: var(--surface-panel);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .titleblock-row {
@@ -264,17 +296,24 @@ input {
   color: var(--text-tertiary);
 }
 
+/* sits on the grid line one square below the header */
 .rule {
   border-top: var(--border-rule);
-  margin: var(--space-14) 0 var(--space-18);
+  margin: calc(var(--u) - 1px) 0 calc(var(--u) - 1px);
 }
 
 .meters {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  gap: var(--space-26);
+  grid-template-columns: repeat(3, minmax(0, 1fr)) calc(6 * var(--u));
+  grid-template-columns: repeat(3, round(down, (100% - 9 * var(--u)) / 3, var(--u))) 1fr;
+  gap: var(--u);
   align-items: end;
-  margin-bottom: var(--space-20);
+  height: var(--u);
+  margin-bottom: var(--u);
+}
+
+.meters .btn {
+  height: var(--u);
 }
 
 .meter-head {
@@ -283,7 +322,8 @@ input {
   font-size: var(--text-label);
   letter-spacing: var(--ls-label);
   color: var(--text-secondary);
-  margin-bottom: var(--space-6);
+  line-height: 14px;
+  margin-bottom: 6px; /* 14 + 6 + 8px bar = one square */
 }
 
 .meter-head span:last-child {
@@ -390,8 +430,9 @@ input {
   gap: var(--action-gap);
   border: var(--stroke-panel) dashed var(--copper);
   background: var(--surface-panel);
-  padding: var(--space-12) var(--space-14);
-  margin-bottom: var(--panel-gap);
+  min-height: calc(2 * var(--u));
+  padding: var(--space-8) var(--space-14);
+  margin-bottom: var(--u);
   font-size: var(--text-label);
   letter-spacing: var(--ls-caption);
   color: var(--text-secondary);
@@ -411,24 +452,28 @@ input {
 .sections {
   display: flex;
   flex-direction: column;
-  gap: var(--panel-gap);
+  gap: var(--u);
 }
 
+/* The border is an inset shadow, so it takes no space and the panel height is
+   always a whole number of squares, whatever the browser does with 1.5px borders. */
 .panel {
-  border: var(--border-panel);
+  box-shadow: inset 0 0 0 var(--stroke-panel) var(--ink);
   background: var(--surface-panel);
 }
 
+/* head is one square tall; its bottom border lands on the grid line */
+/* one square tall; its 1px bottom border is drawn on the grid line */
 .panel-head {
   display: flex;
   align-items: center;
   gap: var(--space-8);
   border-bottom: var(--border-inner);
-  padding: var(--space-8) 20px;
+  height: calc(var(--u) + 1px);
+  padding: 0 var(--u);
   font-size: var(--text-tab);
   letter-spacing: var(--ls-tab);
   color: var(--text-secondary);
-  min-height: 34px;
 }
 
 .panel-head .count {
@@ -439,17 +484,27 @@ input {
   flex: 1;
 }
 
+/* cards start one square in from the panel edge */
+/* cards start one square in and one square down from the head */
 .panel-body {
-  padding: var(--panel-pad);
+  padding: calc(var(--u) - 1px) var(--u) var(--u);
 }
 
+/* cards are 8 x 3 squares with one square between them */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: var(--space-10);
+  grid-template-columns: repeat(auto-fill, calc(8 * var(--u)));
+  grid-auto-rows: calc(3 * var(--u));
+  gap: var(--u);
+}
+
+.cards > .form {
+  grid-row: span 2;
 }
 
 .empty {
+  grid-column: 1 / -1;
+  align-self: center;
   font-size: var(--text-micro);
   color: var(--text-tertiary);
   letter-spacing: var(--ls-caption);
@@ -466,7 +521,7 @@ input {
   background: var(--surface-panel-opaque);
   padding: var(--space-12) var(--space-14);
   color: var(--text-primary);
-  min-height: 64px;
+  overflow: hidden;
 }
 
 a.card:hover {
@@ -560,7 +615,6 @@ a.card:hover .card-host {
   letter-spacing: var(--ls-label);
   padding: var(--space-12) var(--space-14);
   cursor: pointer;
-  min-height: 64px;
 }
 
 .add-tile:hover {
@@ -570,7 +624,12 @@ a.card:hover .card-host {
 
 .add-tile.wide {
   width: 100%;
-  min-height: 52px;
+  height: calc(2 * var(--u));
+}
+
+.section-form {
+  height: calc(4 * var(--u));
+  justify-content: center;
 }
 
 /* ---------- forms ---------- */
@@ -625,7 +684,7 @@ a.card:hover .card-host {
 
 .footer {
   border-top: var(--border-inner);
-  margin-top: var(--space-26);
+  margin-top: var(--u);
   padding-top: var(--space-10);
   display: flex;
   justify-content: space-between;
@@ -660,9 +719,9 @@ a.card:hover .card-host {
   }
   .meters {
     grid-template-columns: 1fr;
+    height: auto;
   }
   .titleblock {
-    min-width: 0;
     width: 100%;
   }
 }

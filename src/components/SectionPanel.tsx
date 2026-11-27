@@ -103,8 +103,8 @@ export function SectionPanel({
                 + ADD A SITE
               </button>
             ))}
+          {!editing && section.sites.length === 0 && <div className="empty">NO SITES YET · PRESS EDIT LINKS TO ADD ONE</div>}
         </div>
-        {!editing && section.sites.length === 0 && <div className="empty">NO SITES YET · PRESS EDIT LINKS TO ADD ONE</div>}
       </div>
     </div>
   );

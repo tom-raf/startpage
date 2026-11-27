@@ -1,11 +1,12 @@
 """Pixel-art rat cook GIF for the start page header.
 
-Drawn at 76x40 pixels and scaled up 3x by CSS (image-rendering: pixelated).
+Drawn at 83x45 pixels and scaled up 3x by CSS (image-rendering: pixelated).
 Three rounds: fetch an ingredient from the fridge, chop it, fry it, flip it onto the plate.
 """
 from PIL import Image
 
-W, H = 76, 40
+W, H = 83, 45
+DY = 5  # the scene was drawn for 40 rows; extra wall goes on top
 PAL = {
     "K": (35, 42, 68),     # ink outline
     "G": (150, 148, 156),  # rat grey
@@ -81,6 +82,7 @@ class Frame:
         self.px = {}
 
     def put(self, x, y, c):
+        y += DY
         if 0 <= x < W and 0 <= y < H and c != ".":
             self.px[(x, y)] = c
 
@@ -160,6 +162,9 @@ def kitchen(f, t, fridge_open, plate_food, flames_on=True):
     f.rect(PAN[0], 24, PAN[1], 27, "S")
     f.rect(PAN[0], 24, PAN[1], 24, "s")
     f.rect(PAN[1] + 1, 25, PAN[1] + 3, 25, "K")
+    # salt and pepper on the end of the counter
+    f.rect(77, 27, 78, 30, "w"); f.rect(77, 26, 78, 26, "K")
+    f.rect(80, 27, 81, 30, "S"); f.rect(80, 26, 81, 26, "K")
     # plate with the food made so far
     f.rect(PLATE[0], 30, PLATE[1], 30, "w")
     f.rect(PLATE[0] + 1, 30, PLATE[1] - 1, 30, "Q")
