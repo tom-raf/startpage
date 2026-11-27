@@ -218,6 +218,28 @@ input {
   font-size: var(--text-stat);
 }
 
+.masthead-right {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-14);
+}
+
+/* 76x40 pixel GIF shown at 3x, kept crisp */
+.kitchen {
+  border: var(--border-panel);
+  background: var(--surface-panel);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.kitchen img {
+  display: block;
+  width: 228px;
+  height: 120px;
+  image-rendering: pixelated;
+}
+
 .titleblock {
   border: var(--border-panel);
   padding: var(--space-10) var(--space-14);
@@ -630,6 +652,12 @@ a.card:hover .card-host {
 }
 
 @media (max-width: 900px) {
+  .masthead-right {
+    width: 100%;
+  }
+  .kitchen {
+    display: none;
+  }
   .meters {
     grid-template-columns: 1fr;
   }

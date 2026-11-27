@@ -12,6 +12,8 @@ import {
 } from "../useNow";
 import { describeWeather, useWeather } from "../useWeather";
 
+const kitchenGif = `${import.meta.env.BASE_URL}rat-cook.gif`;
+
 const pad = (n: number) => String(n).padStart(2, "0");
 
 function Meter({ label, pct, tone }: { label: string; pct: number; tone?: "price" | "copper" }) {
@@ -87,13 +89,18 @@ export function Header({
           </div>
         </div>
 
-        <div className="titleblock">
-          {rows.map((r) => (
-            <div className="titleblock-row" key={r.label}>
-              <span>{r.label}</span>
-              <span>{r.value}</span>
-            </div>
-          ))}
+        <div className="masthead-right">
+          <div className="kitchen">
+            <img src={kitchenGif} alt="A pixel-art rat fetches food from the fridge, chops it and fries it" />
+          </div>
+          <div className="titleblock">
+            {rows.map((r) => (
+              <div className="titleblock-row" key={r.label}>
+                <span>{r.label}</span>
+                <span>{r.value}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
