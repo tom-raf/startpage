@@ -24,7 +24,7 @@ npm run dev
 ## Set it in Firefox
 
 - **Homepage:** Settings > Home > Homepage and new windows > Custom URLs. Paste the Pages URL.
-- **New tab:** Firefox does not allow a custom new tab URL without an extension. Install [New Tab Override](https://addons.mozilla.org/firefox/addon/new-tab-override/) and give it the same URL.
+- **New tab:** Firefox has no setting for a custom new tab URL. Use the small extension in [`extension/`](extension/README.md). It shows this page in every new tab and keeps the address bar empty.
 
 ## Change the default links
 

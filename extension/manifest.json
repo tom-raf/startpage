@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Tony's Start Page",
+  "version": "1.0.0",
+  "description": "Opens tom-raf.github.io/startpage in every new tab, with the address bar left empty.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "startpage@tom-raf.github.io",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
+}
