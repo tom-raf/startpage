@@ -80,7 +80,7 @@ export function Header({
           <div className="wordmark">
             START <em>PAGE</em>
           </div>
-          <div className="tagline">{greeting(now)}, TONY · ONE SHEET, EVERY TAB</div>
+          <div className="tagline">{greeting(now)}, TOMRAF · ONE SHEET, EVERY TAB</div>
           <div className="clock">
             {pad(now.getHours())}
             <span className="blink">:</span>
